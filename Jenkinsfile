@@ -24,7 +24,7 @@ pipeline {
             steps{
                 script {
                     withSonarQubeEnv('SonarCloud') {
-                        sh "${scannerHome}/bin/sonar-scanner"
+                        sh "${scannerHome}/bin/sonar-scanner -X"
                     }
                 }
             }
