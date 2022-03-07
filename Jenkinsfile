@@ -5,22 +5,26 @@ pipeline {
     environment {
         BRANCH_NAME = "${GIT_BRANCH}"
         SLACK_URL = "${SLACK_URL}"
+        DOCKER_HUB = credentials('dockerhub')
+        USER = "${USER}"
+        PROJECT_NAME = "${PROJECT_NAME}"
     }
     stages {
 
-        stage('Delete Folders & Check Version') {
-            steps {        
-                sh "echo 'Deleting folders...'"
+        stage('Checking Tools') {
+            steps {
+                sh "echo 'Checking tools...'"
+                sh "docker --version"
             }
         }
 
         stage('Install Dependencies') {
             steps {
                 sh "echo 'Installing dependencies...'"
-                sh "echo 'This is the slack_url ${SLACK_URL}'"
-                sh "python3 --version"
+                sh "docker build -t {}/"
             }
         }
+
         stage('Test') {
             steps {
                 sh "echo 'Testing...'"
@@ -30,12 +34,6 @@ pipeline {
         stage('Build') {
             steps {
                 sh "echo 'Building app...'"            
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                sh "echo 'Deploying app...'"            
             }
         }
     }
