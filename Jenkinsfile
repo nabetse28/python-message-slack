@@ -4,6 +4,7 @@ pipeline {
     
     environment {
         BRANCH_NAME = "${GIT_BRANCH}"
+        SLACK_URL = "${SLACK_URL}"
     }
     stages {
 
@@ -16,6 +17,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh "echo 'Installing dependencies...'"
+                sh "echo 'This is the slack_url ${SLACK_URL}'"
+                sh "python3 --version"
             }
         }
         stage('Test') {
