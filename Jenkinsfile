@@ -1,7 +1,7 @@
 pipeline {
 
     agent {
-        label 'windows-worker'
+        any
     }
     environment {
         BRANCH_NAME = "${GIT_BRANCH}"
