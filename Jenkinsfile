@@ -15,7 +15,8 @@ pipeline {
         stage('Checking Tools') {
             steps {
                 sh "echo 'Checking tools...'"
-                sh "docker --version"
+                sh "python3 --version"
+                sh "docker -version"
             }
         }
 
