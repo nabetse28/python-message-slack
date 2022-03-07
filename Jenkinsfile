@@ -8,6 +8,7 @@ pipeline {
         DOCKER_HUB = credentials('dockerhub')
         USER = "${USER}"
         PROJECT_NAME = "${PROJECT_NAME}"
+        scannerHome = tool 'SonarCloud'
     }
     stages {
 
@@ -18,10 +19,20 @@ pipeline {
             }
         }
 
-        stage('Install Dependencies') {
+        stage('SonarQube Analysis') {
+            steps{
+                script {
+                    withSonarQubeEnv('sonarqube') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+            }
+        }
+
+        stage('Building Project') {
             steps {
                 sh "echo 'Installing dependencies...'"
-                sh "docker build -t {}/"
+                sh "docker build -t ${USER}/${PROJECT_NAME}:latest"
             }
         }
 
