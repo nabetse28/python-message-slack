@@ -1,8 +1,7 @@
 pipeline {
 
-    agent {
-        any
-    }
+    agent any
+    
     environment {
         BRANCH_NAME = "${GIT_BRANCH}"
     }
