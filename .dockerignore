@@ -1,0 +1,8 @@
+# Ingore everything
+*
+
+# Except these
+!*.py
+!requirements.py
+!config/
+!utils/
