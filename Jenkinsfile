@@ -10,6 +10,7 @@ pipeline {
         USER = "${USER}"
         PROJECT_NAME = "${PROJECT_NAME}"
         scannerHome = tool 'SonarCloud'
+        PYTHON_ENV="./venv/bin/"
     }
     stages {
 
@@ -27,11 +28,9 @@ pipeline {
             steps{
                 script {
                     sh "python3 -m venv venv"
-                    sh "source ./venv/bin/activate"
-                    sh "pip install -r requirements.txt"
-                    sh "coverage run -m pytest"
-                    sh "coverage xml"
-                    sh "deactivate"
+                    sh "${PYTHON_ENV}pip install -r requirements.txt"
+                    sh "${PYTHON_ENV}coverage run -m pytest"
+                    sh "${PYTHON_ENV}coverage xml"
                 }
             }
         }
