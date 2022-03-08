@@ -19,6 +19,7 @@ pipeline {
                 // sh "python3 --version"
                 // sh "echo '${GIT_COMMIT}'"
                 sh "docker --version"
+                sh "helm version"
             }
         }
 
