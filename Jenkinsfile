@@ -35,9 +35,9 @@ pipeline {
         stage('Building Project') {
             steps {
                 sh "echo 'Installing dependencies...'"
-                sh "docker build -t ${USER}/${PROJECT_NAME}:{GIT_COMMIT} -t ${USER}/${PROJECT_NAME}:latest ."
+                sh "docker build -t ${USER}/${PROJECT_NAME}:${GIT_COMMIT} -t ${USER}/${PROJECT_NAME}:latest ."
                 sh "echo $DOCKER_HUB_PSW | docker login -u $DOCKER_HUB_USR --password-stdin"
-                sh "docker push ${USER}/${PROJECT_NAME}:{GIT_COMMIT}"
+                sh "docker push ${USER}/${PROJECT_NAME}:${GIT_COMMIT}"
                 sh "docker push ${USER}/${PROJECT_NAME}:latest"
             }
         }
