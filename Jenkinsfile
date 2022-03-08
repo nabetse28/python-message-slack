@@ -14,6 +14,7 @@ pipeline {
     stages {
 
         stage('Checking Tools') {
+            when {branch pattern: "(dev|prod|PR-.*)", comparator: "REGEXP"}
             steps {
                 sh "echo 'Checking tools...'"
                 sh "docker --version"
@@ -22,6 +23,7 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
+            when {branch pattern: "(dev|prod|PR-.*)", comparator: "REGEXP"}
             steps{
                 script {
                     withSonarQubeEnv('SonarCloud') {
@@ -32,6 +34,7 @@ pipeline {
         }
 
         stage('Building Project') {
+            when {branch pattern: "(dev|PR-.*)", comparator: "REGEXP"}
             steps {
                 sh "echo 'Installing dependencies...'"
                 sh "docker build -t ${USER}/${PROJECT_NAME}:${GIT_COMMIT} -t ${USER}/${PROJECT_NAME}:latest ."
@@ -40,5 +43,12 @@ pipeline {
                 sh "docker push ${USER}/${PROJECT_NAME}:latest"
             }
         }
+        stage('Deploying Application') {
+            when {branch pattern: "(prod)", comparator: "REGEXP"}
+            steps {
+                sh "source ./scripts/deploy_image.sh"
+            }
+        }
+
     }
 }
