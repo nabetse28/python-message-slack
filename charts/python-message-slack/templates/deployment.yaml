@@ -1,0 +1,36 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ template "fullname" . }}
+  namespace: {{ .Release.Namespace}}
+  labels:
+    app: {{ template "name" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  schedule: '{{ .Values.schedule }}'
+  successfulJobsHistoryLimit: 0
+  failedJobsHistoryLimit: 0
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          imagePullSecrets:
+          - name: {{ .Values.image.pullSecret }}
+          containers:
+          - name: {{ .Chart.Name }}
+            image: "{{ .Values.image.repository }}:latest"
+            # image: "{{ .Values.image.name }}:latest"
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command: ["python"]
+            args: ["./app.py"]
+            env:
+              - name: SLACK_URL
+                valueFrom:
+                  secretKeyRef:
+                    name: {{ .Release.Name }}-slack-url
+                    key: slack_url
+              - name: SLACK_CHANNEL
+                value: "{{ .Values.slackSecret.channel }}"
+          restartPolicy: OnFailure
