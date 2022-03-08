@@ -3,6 +3,6 @@
 
 # Except these
 !*.py
-!requirements.py
+!requirements.txt
 !config/
 !utils/
