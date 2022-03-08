@@ -16,8 +16,6 @@ pipeline {
         stage('Checking Tools') {
             steps {
                 sh "echo 'Checking tools...'"
-                // sh "python3 --version"
-                // sh "echo '${GIT_COMMIT}'"
                 sh "docker --version"
                 sh "helm version"
             }
@@ -40,20 +38,7 @@ pipeline {
                 sh "echo $DOCKER_HUB_PSW | docker login -u $DOCKER_HUB_USR --password-stdin"
                 sh "docker push ${USER}/${PROJECT_NAME}:${GIT_COMMIT}"
                 sh "docker push ${USER}/${PROJECT_NAME}:latest"
-                sh "source ./scripts/deploy_image.sh"
             }
         }
-
-        // stage('Test') {
-        //     steps {
-        //         sh "echo 'Testing...'"
-        //     }
-        // }
-
-        // stage('Build') {
-        //     steps {
-        //         sh "echo 'Building app...'"            
-        //     }
-        // }
     }
 }
