@@ -22,6 +22,21 @@ pipeline {
             }
         }
 
+        stage('Installing Dependencies & Testing') {
+            when {branch pattern: "(dev|prod|PR-.*)", comparator: "REGEXP"}
+            steps{
+                script {
+                    sh "python3 -m venv venv"
+                    sh "source ./venv/bin/activate"
+                    sh "pip install -r requirements.txt"
+                    sh "coverage run -m pytest"
+                    sh "coverage xml"
+                    sh "deactivate"
+                }
+            }
+        }
+
+
         stage('SonarQube Analysis') {
             when {branch pattern: "(dev|prod|PR-.*)", comparator: "REGEXP"}
             steps{
