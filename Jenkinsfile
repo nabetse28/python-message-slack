@@ -33,7 +33,7 @@ pipeline {
         stage('Building Project') {
             steps {
                 sh "echo 'Installing dependencies...'"
-                sh "docker build -t ${USER}/${PROJECT_NAME}:latest"
+                sh "docker build -t ${USER}/${PROJECT_NAME}:latest ."
             }
         }
 
