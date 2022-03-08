@@ -3,6 +3,7 @@ pipeline {
     agent any
     
     environment {
+        GIT_COMMIT = "${GIT_COMMIT}"
         BRANCH_NAME = "${GIT_BRANCH}"
         SLACK_URL = "${SLACK_URL}"
         DOCKER_HUB = credentials('dockerhub')
@@ -16,6 +17,7 @@ pipeline {
             steps {
                 sh "echo 'Checking tools...'"
                 sh "python3 --version"
+                sh "echo '${GIT_COMMIT}'"
                 // sh "docker --version"
             }
         }
