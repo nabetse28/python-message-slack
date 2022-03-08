@@ -32,6 +32,11 @@ pipeline {
                 }
             }
         }
+        stage("Quality gate") {
+            steps {
+                waitForQualityGate abortPipeline: true
+            }
+        }
 
         stage('Building Project') {
             when {branch pattern: "(dev|PR-.*)", comparator: "REGEXP"}
