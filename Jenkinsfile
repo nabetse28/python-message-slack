@@ -35,20 +35,20 @@ pipeline {
                 sh "echo 'Installing dependencies...'"
                 sh "docker build -t ${USER}/${PROJECT_NAME}:latest ."
                 sh "echo $DOCKER_HUB_PSW | docker login -u $DOCKER_HUB_USR --password-stdin"
-                // sh "docker push ${USER}/${PROJECT_NAME}:latest"
+                sh "docker push ${USER}/${PROJECT_NAME}:latest"
             }
         }
 
-        stage('Test') {
-            steps {
-                sh "echo 'Testing...'"
-            }
-        }
+        // stage('Test') {
+        //     steps {
+        //         sh "echo 'Testing...'"
+        //     }
+        // }
 
-        stage('Build') {
-            steps {
-                sh "echo 'Building app...'"            
-            }
-        }
+        // stage('Build') {
+        //     steps {
+        //         sh "echo 'Building app...'"            
+        //     }
+        // }
     }
 }
