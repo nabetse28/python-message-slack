@@ -10,10 +10,12 @@ pipeline {
         USER = "${USER}"
         PROJECT_NAME = "${PROJECT_NAME}"
         scannerHome = tool 'SonarCloud'
+        PYTHON_ENV="./venv/bin/"
     }
     stages {
 
         stage('Checking Tools') {
+            when {branch pattern: "(dev|prod|PR-.*)", comparator: "REGEXP"}
             steps {
                 sh "echo 'Checking tools...'"
                 sh "docker --version"
@@ -21,7 +23,21 @@ pipeline {
             }
         }
 
+        stage('Installing Dependencies & Testing') {
+            when {branch pattern: "(dev|prod|PR-.*)", comparator: "REGEXP"}
+            steps{
+                script {
+                    sh "python3 -m venv venv"
+                    sh "${PYTHON_ENV}pip install -r requirements.txt"
+                    sh "${PYTHON_ENV}coverage run -m pytest"
+                    sh "${PYTHON_ENV}coverage xml"
+                }
+            }
+        }
+
+
         stage('SonarQube Analysis') {
+            when {branch pattern: "(dev|prod|PR-.*)", comparator: "REGEXP"}
             steps{
                 script {
                     withSonarQubeEnv('SonarCloud') {
@@ -32,6 +48,7 @@ pipeline {
         }
 
         stage('Building Project') {
+            when {branch pattern: "(dev|PR-.*)", comparator: "REGEXP"}
             steps {
                 sh "echo 'Installing dependencies...'"
                 sh "docker build -t ${USER}/${PROJECT_NAME}:${GIT_COMMIT} -t ${USER}/${PROJECT_NAME}:latest ."
@@ -40,5 +57,12 @@ pipeline {
                 sh "docker push ${USER}/${PROJECT_NAME}:latest"
             }
         }
+        stage('Deploying Application') {
+            when {branch pattern: "(prod)", comparator: "REGEXP"}
+            steps {
+                sh "source ./scripts/deploy_image.sh"
+            }
+        }
+
     }
 }
